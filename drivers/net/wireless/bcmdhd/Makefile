@@ -521,7 +521,10 @@ endif
   # Remove common feature for BCM4330
   DHDCFLAGS :=$(filter-out -DSUPPORT_AMPDU_MPDU_CMD,$(DHDCFLAGS))
   DHDCFLAGS :=$(filter-out -DVSDB,$(DHDCFLAGS))
-  DHDCFLAGS :=$(filter-out -DPROP_TXSTATUS,$(DHDCFLAGS))
+  # minlexx: do not remove PROP_TXSTATUS, otherwise linking of kernel fails
+  # with undefined references to "dhd_wlfc_{get_enable,init,deinit}"
+  # drivers/built-in.o: In function ... kernel/samsung/msm8974/drivers/net/wireless/bcmdhd/wl_cfg80211.c:1932: undefined reference to `dhd_wlfc_get_enable'
+  # DHDCFLAGS :=$(filter-out -DPROP_TXSTATUS,$(DHDCFLAGS))
   DHDCFLAGS :=$(filter-out -DROAM_AP_ENV_DETECTION,$(DHDCFLAGS))
   DHDCFLAGS :=$(filter-out -DDHD_USE_IDLECOUNT,$(DHDCFLAGS))
   DHDCFLAGS :=$(filter-out -DDISABLE_11H_SOFTAP,$(DHDCFLAGS))
