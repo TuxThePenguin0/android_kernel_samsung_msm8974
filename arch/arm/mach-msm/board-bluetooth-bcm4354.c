@@ -292,6 +292,7 @@ static int bcm4354_bluetooth_probe(struct platform_device *pdev)
         }
     }
 #endif
+    pr_info("[BT] %s: gpio_bt_en = %d", __func__, gpio_bt_en);
     rc = gpio_request(gpio_bt_en, "bt_en");
     if (rc)
     {

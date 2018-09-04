@@ -699,7 +699,8 @@ static bool sec_bat_battery_cable_check(struct sec_battery_info *battery)
 		}
 	}
 
-	dev_info(battery->dev, "%s: Battery Connected\n", __func__);
+	// minlexx: disable log spam
+	// dev_info(battery->dev, "%s: Battery Connected\n", __func__);
 
 	if (battery->pdata->cable_check_type &
 		SEC_BATTERY_CABLE_CHECK_POLLING) {
@@ -916,8 +917,9 @@ static bool sec_bat_voltage_check(struct sec_battery_info *battery)
 	int recharge_condition_vcell = battery->pdata->recharge_condition_vcell;
 
 	if (battery->status == POWER_SUPPLY_STATUS_DISCHARGING) {
-		dev_dbg(battery->dev,
-			"%s: Charging Disabled\n", __func__);
+        // minlexx: reduce dmesg log spam
+		//dev_dbg(battery->dev,
+		//	"%s: Charging Disabled\n", __func__);
 		return true;
 	}
 
@@ -1047,9 +1049,10 @@ static bool sec_bat_get_temperature_by_adc(
 temp_by_adc_goto:
 	value->intval = temp;
 
-	dev_info(battery->dev,
-		"%s: Temp(%d), Temp-ADC(%d)\n",
-		__func__, temp, temp_adc);
+    // minlexx: disable log spam
+	//dev_info(battery->dev,
+	//	"%s: Temp(%d), Temp-ADC(%d)\n",
+	//	__func__, temp, temp_adc);
 
 	return true;
 }
@@ -1101,14 +1104,15 @@ static bool sec_bat_temperature(
 			battery->pdata->temp_low_threshold_normal;
 	}
 
-	dev_info(battery->dev,
-		"%s: HLT(%d) HLR(%d) HT(%d), HR(%d), LT(%d), LR(%d)\n",
-		__func__, battery->temp_highlimit_threshold,
-		battery->temp_highlimit_recovery,
-		battery->temp_high_threshold,
-		battery->temp_high_recovery,
-		battery->temp_low_threshold,
-		battery->temp_low_recovery);
+	// minlexx: disable log spam
+	//dev_info(battery->dev,
+	//	"%s: HLT(%d) HLR(%d) HT(%d), HR(%d), LT(%d), LR(%d)\n",
+	//	__func__, battery->temp_highlimit_threshold,
+	//	battery->temp_highlimit_recovery,
+	//	battery->temp_high_threshold,
+	//	battery->temp_high_recovery,
+	//	battery->temp_low_threshold,
+	//	battery->temp_low_recovery);
 	return ret;
 }
 
@@ -1123,7 +1127,7 @@ static void sec_bat_swelling_check(struct sec_battery_info *battery, int tempera
 	psy_do_property(battery->pdata->charger_name, get,
 			POWER_SUPPLY_PROP_VOLTAGE_MAX, val);
 
-	pr_info("%s: status(%d), swell_mode(%d:%d:%d), cv(%d)mV, temp(%d)\n",
+	pr_debug("%s: status(%d), swell_mode(%d:%d:%d), cv(%d)mV, temp(%d)\n",
 		__func__, battery->status, battery->swelling_mode,
 		battery->charging_block, (battery->current_event & SEC_BAT_CURRENT_EVENT_LOW_TEMP),
 		val.intval, temperature);
@@ -1309,8 +1313,9 @@ static bool sec_bat_temperature_check(
 	int pre_health;
 
 	if (battery->status == POWER_SUPPLY_STATUS_DISCHARGING) {
-		dev_dbg(battery->dev,
-			"%s: Charging Disabled\n", __func__);
+        // minlexx: reduce log spam
+		//dev_dbg(battery->dev,
+		//	"%s: Charging Disabled\n", __func__);
 		return true;
 	}
 
@@ -1715,7 +1720,7 @@ static bool sec_bat_time_management(
 	get_monotonic_boottime(&ts);
 
 	if(battery->charging_start_time == 0 || !battery->safety_timer_set) {
-		pr_info("%s: Charging Disabled\n" ,__func__);
+		pr_debug("%s: Charging Disabled\n" ,__func__); // minlexx: reduce log spam
 		return true;
 	}
 
@@ -1727,9 +1732,10 @@ static bool sec_bat_time_management(
 
 	battery->charging_passed_time = charging_time;
 
-	dev_info(battery->dev,
-		"%s: Charging Time : %ld secs\n", __func__,
-		battery->charging_passed_time);
+    // minlexx: disable log spam
+	//dev_info(battery->dev,
+	//	"%s: Charging Time : %ld secs\n", __func__,
+	//	battery->charging_passed_time);
 
 	switch (battery->status) {
 	case POWER_SUPPLY_STATUS_FULL:
@@ -2087,11 +2093,12 @@ static bool sec_bat_fullcharged_check(
 	if (sec_bat_check_fullcharged(battery))
 		sec_bat_do_fullcharged(battery);
 
-	dev_info(battery->dev,
-		"%s: Charging Mode : %s\n", __func__,
-		battery->is_recharging ?
-		sec_bat_charging_mode_str[SEC_BATTERY_CHARGING_RECHARGING] :
-		sec_bat_charging_mode_str[battery->charging_mode]);
+    // minlexx: disable log spam
+	//dev_info(battery->dev,
+	//	"%s: Charging Mode : %s\n", __func__,
+	//	battery->is_recharging ?
+	//	sec_bat_charging_mode_str[SEC_BATTERY_CHARGING_RECHARGING] :
+	//	sec_bat_charging_mode_str[battery->charging_mode]);
 
 	return true;
 }
@@ -2112,7 +2119,7 @@ static void sec_bat_check_changed_soc(
 		if (battery->prev_reported_soc == value->intval) {
 			goto report;
 		} else {
-			dev_info(battery->dev, "%s: prev_reported_soc = %d, soc = %d\n",
+			dev_dbg(battery->dev, "%s: prev_reported_soc = %d, soc = %d\n",
 					__func__, battery->prev_reported_soc, value->intval);
 		}
 		/* if soc have been chaged, only change soc by 1
@@ -2252,7 +2259,7 @@ static void sec_bat_get_battery_info(
 	} else if ((battery->capacity != 100) &&
 		   ((c_ts.tv_sec - old_ts.tv_sec) >= 30)) {
 		battery->capacity++;
-		pr_info("%s : forced full-charged sequence for the capacity(%d)\n",
+		pr_debug("%s : forced full-charged sequence for the capacity(%d)\n",
 			__func__, battery->capacity);
 		old_ts = c_ts;
 	}
@@ -2265,19 +2272,20 @@ static void sec_bat_get_battery_info(
 	}
 #endif
 
-	dev_info(battery->dev,
-		"%s:Vnow(%dmV),Inow(%dmA),Imax(%dmA),SOC(%d%%),Tbat(%d),is_hc_usb(%d)\n",
-		__func__,
-		battery->voltage_now, battery->current_now,
-		battery->current_max, battery->capacity,
-		battery->temperature, battery->is_hc_usb);
-	dev_dbg(battery->dev,
-		"%s,Vavg(%dmV),Vocv(%dmV),Tamb(%d),"
-		"Iavg(%dmA),Iadc(%d)\n",
-		battery->present ? "Connected" : "Disconnected",
-		battery->voltage_avg, battery->voltage_ocv,
-		battery->temper_amb,
-		battery->current_avg, battery->current_adc);
+    // disable battery spam in dmesg log (minlexx)
+	//dev_info(battery->dev,
+	//	"%s:Vnow(%dmV),Inow(%dmA),Imax(%dmA),SOC(%d%%),Tbat(%d),is_hc_usb(%d)\n",
+	//	__func__,
+	//	battery->voltage_now, battery->current_now,
+	//	battery->current_max, battery->capacity,
+	//	battery->temperature, battery->is_hc_usb);
+	//dev_dbg(battery->dev,
+	//	"%s,Vavg(%dmV),Vocv(%dmV),Tamb(%d),"
+	//	"Iavg(%dmA),Iadc(%d)\n",
+	//	battery->present ? "Connected" : "Disconnected",
+	//	battery->voltage_avg, battery->voltage_ocv,
+	//	battery->temper_amb,
+	//	battery->current_avg, battery->current_adc);
 }
 
 static void sec_bat_polling_work(struct work_struct *work)
@@ -2564,8 +2572,9 @@ static void sec_bat_calculate_safety_time(struct sec_battery_info *battery)
 		battery->stop_timer = false;
 	}
 
-	pr_info("%s : EXPIRED_TIME(%llu), IP(%d), CP(%d), CURR(%d), STANDARD(%d)\n",
-		__func__, expired_time, input_power, charging_power, curr, battery->pdata->standard_curr);
+	// minlexx: disable log spam
+	//pr_info("%s : EXPIRED_TIME(%llu), IP(%d), CP(%d), CURR(%d), STANDARD(%d)\n",
+	//	__func__, expired_time, input_power, charging_power, curr, battery->pdata->standard_curr);
 
 	if (curr == 0)
 		return;
@@ -2573,7 +2582,8 @@ static void sec_bat_calculate_safety_time(struct sec_battery_info *battery)
 	expired_time *= battery->pdata->standard_curr;
 	do_div(expired_time, curr);
 
-	pr_info("%s : CAL_EXPIRED_TIME(%llu) TIME NOW(%ld) TIME PREV(%ld)\n", __func__, expired_time, ts.tv_sec, battery->prev_safety_time);
+    // minlexx: disable log spam
+	// pr_info("%s : CAL_EXPIRED_TIME(%llu) TIME NOW(%ld) TIME PREV(%ld)\n", __func__, expired_time, ts.tv_sec, battery->prev_safety_time);
 
 	if (expired_time <= ((ts.tv_sec - battery->prev_safety_time) * 1000))
 		expired_time = 0;
@@ -2586,7 +2596,8 @@ static void sec_bat_calculate_safety_time(struct sec_battery_info *battery)
 
 	battery->expired_time = expired_time;
 	battery->prev_safety_time = ts.tv_sec;
-	pr_info("%s : REMAIN_TIME(%ld) CAL_REMAIN_TIME(%ld)\n", __func__, battery->expired_time, battery->cal_safety_time);
+    // minlexx: disable log spam
+	// pr_info("%s : REMAIN_TIME(%ld) CAL_REMAIN_TIME(%ld)\n", __func__, battery->expired_time, battery->cal_safety_time);
 }
 
 static void sec_bat_monitor_work(
@@ -2676,13 +2687,14 @@ continue_monitor:
 	if (!battery->charging_block)
 		sec_bat_calculate_safety_time(battery);
 
-	dev_info(battery->dev,
-		"%s: Status(%s), Mode(%s), Health(%s), Cable(%d), Vendor(%s), level(%d%%)\n",
-		__func__,
-		sec_bat_status_str[battery->status],
-		sec_bat_charging_mode_str[battery->charging_mode],
-		sec_bat_health_str[battery->health],
-		battery->cable_type, battery->pdata->vendor, battery->siop_level);
+    // minlexx: disable log spam
+	//dev_info(battery->dev,
+	//	"%s: Status(%s), Mode(%s), Health(%s), Cable(%d), Vendor(%s), level(%d%%)\n",
+	//	__func__,
+	//	sec_bat_status_str[battery->status],
+	//	sec_bat_charging_mode_str[battery->charging_mode],
+	//	sec_bat_health_str[battery->health],
+	//	battery->cable_type, battery->pdata->vendor, battery->siop_level);
 #if defined(CONFIG_SAMSUNG_BATTERY_ENG_TEST)
 	dev_info(battery->dev,
 			"%s: battery->stability_test(%d), battery->eng_not_full_status(%d)\n",
@@ -2690,9 +2702,10 @@ continue_monitor:
 #endif
 	if (battery->store_mode && battery->cable_type != POWER_SUPPLY_TYPE_BATTERY) {
 
-		dev_info(battery->dev,
-			"%s: @battery->capacity = (%d), battery->status= (%d), battery->store_mode=(%d)\n",
-			__func__, battery->capacity, battery->status, battery->store_mode);
+        // minlexx: disable log spam
+		//dev_info(battery->dev,
+		//	"%s: @battery->capacity = (%d), battery->status= (%d), battery->store_mode=(%d)\n",
+		//	__func__, battery->capacity, battery->status, battery->store_mode);
 
 		if ((battery->capacity >= 35) && (battery->status == POWER_SUPPLY_STATUS_CHARGING)) {
 			sec_bat_set_charging_status(battery,
@@ -3969,7 +3982,7 @@ static int sec_bat_get_property(struct power_supply *psy,
 			if (battery->status == POWER_SUPPLY_STATUS_FULL &&
 				battery->capacity != 100) {
 				val->intval = POWER_SUPPLY_STATUS_CHARGING;
-				pr_info("%s: forced full-charged sequence progressing\n", __func__);
+				pr_debug("%s: forced full-charged sequence progressing\n", __func__);
 			} else
 #endif
 				val->intval = battery->status;

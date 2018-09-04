@@ -45,9 +45,10 @@ static void sec_fg_get_scaled_capacity(
 		0 : ((val->intval - fuelgauge->pdata->capacity_min) * 1000 /
 		(fuelgauge->capacity_max - fuelgauge->pdata->capacity_min));
 
-	dev_info(&fuelgauge->client->dev,
-		"%s: scaled capacity (%d.%d)\n",
-		__func__, val->intval/10, val->intval%10);
+    // minlexx: disable log spam
+	//dev_info(&fuelgauge->client->dev,
+	//	"%s: scaled capacity (%d.%d)\n",
+	//	__func__, val->intval/10, val->intval%10);
 
 #if defined(CONFIG_MACH_KLIMT)|| defined(CONFIG_MACH_CHAGALL)
 	/* Reduce soc jump when battery is full

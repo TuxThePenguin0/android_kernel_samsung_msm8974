@@ -1548,20 +1548,21 @@ static void vfsspi_work_func_debug(struct work_struct *work)
 					| gpio_get_value(g_data->ldo_pin);
 	}
 
-	if (g_data->ocp_en)
-		pr_info("%s r ocpen: %d, ldo: %d,"
-			" sleep: %d, tz: %d, type: %s\n",
-			__func__, gpio_get_value(g_data->ocp_en),
-			ldo_value, gpio_get_value(g_data->sleepPin),
-			g_data->tz_mode,
-			sensor_status[g_data->sensortype+1]);
-	else
-		pr_info("%s r ldo: %d,"
-			" sleep: %d, tz: %d, type: %s\n",
-			__func__, ldo_value,
-			gpio_get_value(g_data->sleepPin),
-			g_data->tz_mode,
-			sensor_status[g_data->sensortype+1]);
+	// minlexx: disable log spam
+	//if (g_data->ocp_en)
+	//	pr_info("%s r ocpen: %d, ldo: %d,"
+	//		" sleep: %d, tz: %d, type: %s\n",
+	//		__func__, gpio_get_value(g_data->ocp_en),
+	//		ldo_value, gpio_get_value(g_data->sleepPin),
+	//		g_data->tz_mode,
+	//		sensor_status[g_data->sensortype+1]);
+	//else
+	//	pr_info("%s r ldo: %d,"
+	//		" sleep: %d, tz: %d, type: %s\n",
+	//		__func__, ldo_value,
+	//		gpio_get_value(g_data->sleepPin),
+	//		g_data->tz_mode,
+	//		sensor_status[g_data->sensortype+1]);
 }
 
 static void vfsspi_enable_debug_timer(void)
