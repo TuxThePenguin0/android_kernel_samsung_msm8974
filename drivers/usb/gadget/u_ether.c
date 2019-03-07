@@ -1075,8 +1075,22 @@ int gether_setup_name(struct usb_gadget *g, u8 ethaddr[ETH_ALEN],
 			"using random %s ethernet address\n", "self");
 
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
-	memcpy(dev->host_mac, ethaddr, ETH_ALEN);
-	printk(KERN_DEBUG "usb: set unique host mac\n");
+    if ((ethaddr[0] == 0x00) && (ethaddr[1] == 0x00) &&
+        (ethaddr[2] == 0x00) && (ethaddr[3] == 0x00) &&
+        (ethaddr[4] == 0x00) && (ethaddr[5] == 0x00)) {
+        printk(KERN_DEBUG "%s: no unique host MAC was set, generate random\n", __func__);
+        /* we could use random_ether_addr() from include/linux/etherdevice.h */
+        /* set fixed host address instead, halium docs suggest to use 02:01:02:03:04:08 */
+        ethaddr[0] = 0x02;
+        ethaddr[1] = 0x01;
+        ethaddr[2] = 0x02;
+        ethaddr[3] = 0x03;
+        ethaddr[4] = 0x04;
+        ethaddr[5] = 0x08;
+    } else {
+        printk(KERN_DEBUG "%s: set unique host mac\n", __func__);
+    }
+    memcpy(dev->host_mac, ethaddr, ETH_ALEN);
 #else
 	if (get_ether_addr(host_addr, dev->host_mac))
 		dev_warn(&g->dev,
