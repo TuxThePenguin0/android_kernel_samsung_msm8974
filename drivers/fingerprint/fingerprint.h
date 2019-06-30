@@ -33,9 +33,10 @@ enum {
 	SENSOR_EGIS,
 };
 
-#define SENSOR_STATUS_SIZE 5
-static char sensor_status[SENSOR_STATUS_SIZE][8] ={"unknown", "failed",
-	"viper", "raptor", "egis"};
+// this is now unused, because of commented code in vfs61xx.c: vfsspi_work_func_debug()
+// #define SENSOR_STATUS_SIZE 5
+// static char sensor_status[SENSOR_STATUS_SIZE][8] = {"unknown", "failed",
+//	"viper", "raptor", "egis"};
 
 /* Fingerprint vendor check */
 #undef ENABLE_VENDOR_CHECK

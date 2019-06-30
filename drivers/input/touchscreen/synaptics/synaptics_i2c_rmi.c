@@ -1746,7 +1746,7 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 #endif
 
 			if (!rmi4_data->finger[finger].state) {
-#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
+/*#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 				dev_info(&rmi4_data->i2c_client->dev,
 						"[%d][P] 0x%02x, x = %d, y = %d, wx = %d, wy = %d |[%d]\n",
 						finger, finger_status, x, y, wx, wy, fingers_to_process);
@@ -1754,22 +1754,22 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 				dev_info(&rmi4_data->i2c_client->dev,
 						"[%d][P] 0x%02x\n",
 						finger, finger_status);
-#endif
+#endif*/
 			} else {
 				rmi4_data->finger[finger].mcount++;
 			}
 
-#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
+/*#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 			if (rmi4_data->debug_log & 0x2)
 				dev_info(&rmi4_data->i2c_client->dev,
 						"[%d] 0x%02x, x = %d, y = %d, wx = %d, wy = %d |[%d]\n",
 						finger, finger_status, x, y, wx, wy, fingers_to_process);
-#endif
+#endif*/
 			touch_count++;
 		}
 
 		if (rmi4_data->finger[finger].state && (!finger_status)) {
-#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
+/*#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 			dev_info(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
 					finger, finger_status, rmi4_data->finger[finger].mcount,
 					rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->lcd_id, system_rev);
@@ -1777,7 +1777,7 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 			dev_info(&rmi4_data->i2c_client->dev, "[%d][R] 0x%02x M[%d], Ver[%02X%02X][%X/%d]\n",
 					finger, finger_status, rmi4_data->finger[finger].mcount,
 					rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->lcd_id, system_rev);
-#endif
+#endif*/
 			rmi4_data->finger[finger].mcount = 0;
 		}
 
