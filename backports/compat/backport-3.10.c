@@ -35,6 +35,7 @@ EXPORT_SYMBOL_GPL(proc_set_user);
 /* get_random_int() was not exported for module use until 3.10-rc.
    Implement it here in terms of the more expensive get_random_bytes()
  */
+/*
 unsigned int get_random_int(void)
 {
 	unsigned int r;
@@ -43,7 +44,7 @@ unsigned int get_random_int(void)
 	return r;
 }
 EXPORT_SYMBOL_GPL(get_random_int);
-
+*/
 #ifdef CONFIG_TTY
 /**
  * tty_port_tty_wakeup - helper to wake up a tty
@@ -205,6 +206,7 @@ static inline void set_page_refcounted(struct page *page)
  * Note: this is probably too low level an operation for use in drivers.
  * Please consult with lkml before using this in your driver.
  */
+/*
 void split_page(struct page *page, unsigned int order)
 {
 	int i;
@@ -213,10 +215,10 @@ void split_page(struct page *page, unsigned int order)
 	VM_BUG_ON(!page_count(page));
 
 #ifdef CONFIG_KMEMCHECK
-	/*
+	
 	 * Split shadow pages too, because free(page[0]) would
 	 * otherwise free the whole shadow.
-	 */
+	 
 	if (kmemcheck_page_is_tracked(page))
 		split_page(virt_to_page(page[0].shadow), order);
 #endif
@@ -225,3 +227,4 @@ void split_page(struct page *page, unsigned int order)
 		set_page_refcounted(page + i);
 }
 EXPORT_SYMBOL_GPL(split_page);
+*/
